@@ -101,6 +101,63 @@
     .nav__cta:hover { background:var(--sky); color:var(--ink); transform:scale(1.04); }
     @media(max-width:768px){ .nav__links{ display:none; } }
 
+    /* ── Hamburger ── */
+    .nav__burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 310;
+    }
+    .nav__burger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--ink);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+    .nav__burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav__burger.open span:nth-child(2) { opacity: 0; }
+    .nav__burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    @media(max-width:768px){ .nav__burger { display:flex; } }
+
+    /* ── Mobile menu overlay ── */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: var(--cream);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-menu__link {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 100;
+      font-size: 2.8rem;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-transform: lowercase;
+      transition: color 0.2s;
+    }
+    .mobile-menu__link:hover { color: var(--sky); }
+
     /* ── Buttons ── */
     .btn {
       display:inline-flex; align-items:center; gap:0.4rem;
@@ -785,6 +842,23 @@
       flex-shrink: 0;
       min-width: 80px;
     }
+    @media(max-width:768px) {
+      .doodle-layout {
+        flex-direction: column;
+      }
+      .doodle-toolbar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-width: unset;
+        width: 100%;
+        gap: 0.8rem;
+      }
+      #doodle-canvas {
+        width: 100% !important;
+        height: 480px !important;
+        flex: none !important;
+      }
+    }
     .doodle-toolbar__section {
       font-family: var(--font-mono);
       font-size: 0.55rem;
@@ -1070,8 +1144,19 @@
         <li><button class="nav__link" data-panel="panel-contact">contact</button></li>
       </ul>
       <button class="nav__cta" data-panel="panel-contact">Say Hello ↗</button>
+      <button class="nav__burger" id="navBurger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu__link" data-panel="panel-about">about</button>
+    <button class="mobile-menu__link" data-panel="panel-work">work</button>
+    <button class="mobile-menu__link" data-panel="panel-resume">resume</button>
+    <button class="mobile-menu__link" data-panel="panel-contact">contact</button>
+  </div>
 
   <!-- HERO -->
   <section id="hero">
@@ -1368,7 +1453,7 @@
               <button class="doodle-btn" id="doodle-clear">✕ clear</button>
             </div>
           </div>
-          <canvas id="doodle-canvas" width="460" height="320"></canvas>
+          <canvas id="doodle-canvas" width="460" height="320" style="display:block"></canvas>
         </div>
       </div>
 
@@ -1398,6 +1483,17 @@
       });
       // Initialise photo stack when about panel opens
       if (id === 'panel-about') initPhotoStack();
+      // Resize canvas on mobile when contact panel opens
+      if (id === 'panel-contact' && window.innerWidth <= 768) {
+        const c = document.getElementById('doodle-canvas');
+        if (c) {
+          setTimeout(() => {
+            const w = c.offsetWidth || c.parentElement.offsetWidth;
+            c.width  = w;
+            c.height = 480;
+          }, 50);
+        }
+      }
     }
 
     function closeAllPanels() {
@@ -1644,6 +1740,28 @@
       }
 
       document.querySelectorAll('.about-sticker').forEach(initDrag);
+    })();
+
+    // ── Mobile hamburger menu ────────────────────────────────────────────
+    (function() {
+      const burger = document.getElementById('navBurger');
+      const menu   = document.getElementById('mobileMenu');
+
+      function toggleMenu() {
+        const isOpen = menu.classList.toggle('open');
+        burger.classList.toggle('open', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      }
+
+      burger.addEventListener('click', toggleMenu);
+
+      menu.querySelectorAll('.mobile-menu__link').forEach(btn => {
+        btn.addEventListener('click', () => {
+          toggleMenu();
+          const panel = btn.dataset.panel;
+          if (panel) openPanel(panel);
+        });
+      });
     })();
 
     // ── Loader ───────────────────────────────────────────────────────────

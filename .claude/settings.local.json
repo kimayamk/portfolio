@@ -39,7 +39,20 @@
       "Bash(python3 build.py)",
       "Bash(git init *)",
       "Bash(git remote *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Read(//Users/kimayakadam/.ssh/**)",
+      "Bash(ssh -T git@github.com)",
+      "Bash(curl -s -H \"Authorization: token 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\" https://api.github.com/user)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('login'\\), d.get\\('message',''\\)\\)\")",
+      "Bash(curl -s -H \"Authorization: token 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\" https://api.github.com/repos/kimayamk/portfolio)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('exists:', d.get\\('full_name','not found'\\), '| private:', d.get\\('private'\\), '| msg:', d.get\\('message',''\\)\\)\")",
+      "Bash(curl -s -H \"Authorization: token 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\" https://api.github.com/user/repos --data '{\"name\":\"portfolio\"}' -X POST)",
+      "Bash(curl -s -H \"Authorization: token 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\" \"https://api.github.com/repos/kimayamk/portfolio\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('permissions:', d.get\\('permissions'\\)\\)\")",
+      "Bash(curl -sI -H \"Authorization: token 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\" https://api.github.com/user)"
     ]
   }
 }
