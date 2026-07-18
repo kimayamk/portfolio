@@ -399,48 +399,44 @@
     }
 
     /* Photo stack */
-    .photo-stack {
+    /* ── Polaroid slideshow ── */
+    .polaroid-show {
       position: relative;
       width: 260px; height: 340px;
-      cursor: pointer; user-select: none;
     }
-    .photo-stack__card {
-      position: absolute; left:0; right:0; top:0; bottom:28px;
-      border-radius: 14px 14px 0 0; overflow: hidden;
-      background: var(--white);
-      box-shadow: 0 4px 18px rgba(26,26,26,0.12);
-      transition: transform 0.5s var(--ease), box-shadow 0.35s;
+    .polaroid-slide {
+      position: absolute; inset: 0;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 8px 32px rgba(26,26,26,0.13), 0 2px 8px rgba(26,26,26,0.07);
+      padding: 10px 10px 36px;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      pointer-events: none;
     }
-    .photo-stack__card img {
-      width:100%; height:100%; object-fit:cover; display:block;
+    .polaroid-slide.active {
+      opacity: 1;
+      pointer-events: auto;
     }
-    /* polaroid base */
-    .photo-stack__card::after {
-      content: attr(data-caption);
-      position: absolute; bottom: -28px; left: -0px; right: -0px;
-      height: 28px; line-height: 28px;
-      background: var(--white); padding: 0 0.7rem;
-      font-family: var(--font-mono); font-size: 0.48rem;
-      letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey);
-      border-radius: 0 0 8px 8px;
+    .polaroid-slide img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block; border-radius: 2px;
     }
-    .photo-stack__card.is-top {
-      box-shadow: 0 18px 52px rgba(26,26,26,0.2) !important;
+    .polaroid-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 36px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 0.46rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey);
     }
-    .photo-stack__card.is-leaving {
-      animation: photoFlyOut 0.42s cubic-bezier(0.4,0,0.6,1) forwards;
-      z-index: 20 !important;
+    .polaroid-dots {
+      display: flex; gap: 6px; justify-content: center; margin-top: 0.8rem;
     }
-    @keyframes photoFlyOut {
-      to { transform: translateX(130%) rotate(22deg); opacity:0; }
+    .polaroid-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(26,26,26,0.18);
+      transition: background 0.3s;
     }
-    .photo-stack__hint {
-      font-family: var(--font-mono); font-size: 0.5rem;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--grey); text-align: center;
-      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
-      margin-top: 0.3rem;
-    }
+    .polaroid-dot.active { background: var(--sky); }
 
     /* ── Right col ── */
     .about__right { display:flex; flex-direction:column; gap:2rem; }
@@ -1176,7 +1172,7 @@
       <div class="hero__left">
         <p class="hero__kicker">
           <span class="kicker-dot"></span>
-          Open to work &nbsp;·&nbsp; Los Angeles
+          Los Angeles
         </p>
 
         <div class="hero__name-block">
@@ -1217,7 +1213,7 @@
     </div>
     <div class="collab-footer__tags">
       <span class="collab-footer__tag">content creation</span>
-      <span class="collab-footer__tag">brand collabs</span>
+      <span class="collab-footer__tag">product design</span>
       <span class="collab-footer__tag">social media</span>
       <span class="collab-footer__tag">storytelling</span>
     </div>
@@ -1248,21 +1244,25 @@
 
           <div class="about__left">
             <p class="about__label">my story</p>
-            <div class="photo-stack" id="photoStack" title="click to flip through">
-              <div class="photo-stack__card" data-caption="solvang ✦" style="z-index:1;">
+            <div class="polaroid-show" id="polaroidShow">
+              <div class="polaroid-slide active">
                 <img src="IMG_7820.jpg" alt="Kimaya in Solvang" />
+                <span class="polaroid-caption"></span>
               </div>
-              <div class="photo-stack__card" data-caption="santa barbara half-marathon ✦" style="z-index:2;">
+              <div class="polaroid-slide">
                 <img src="IMG_7950.jpg" alt="Kimaya at half marathon" />
+                <span class="polaroid-caption"></span>
               </div>
-              <div class="photo-stack__card" data-caption="ucla class of 2025 ✦" style="z-index:3;">
+              <div class="polaroid-slide">
                 <img src="IMG_5433.jpg" alt="Kimaya graduation" />
+                <span class="polaroid-caption"></span>
               </div>
             </div>
-            <p class="photo-stack__hint">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-              click to flip
-            </p>
+            <div class="polaroid-dots" id="polaroidDots">
+              <span class="polaroid-dot active"></span>
+              <span class="polaroid-dot"></span>
+              <span class="polaroid-dot"></span>
+            </div>
           </div>
 
           <div class="about__right">
@@ -1272,10 +1272,6 @@
               <p>i create content and design products. i currently work in accounting in los angeles — i graduated from ucla in 2025 with a major in business economics and a minor in accounting.</p>
               <p>i can't imagine doing one thing for the rest of my life. my mission is to <strong>explore, create, and do hundreds of side quests</strong> &lt;3</p>
               <p>outside work, i enjoy lifting, running, dancing, and exploring different cafes! i did my first half-marathon last year and i'm training for a marathon this year. my main goal? become an <strong>ironman</strong>.</p>
-            </div>
-
-            <div class="about__mission">
-              "i believe empathy solves most problems — in life and in business. whether it's media or technology, my mission is to inspire people to explore, create, and experience life boldly."
             </div>
 
             <div class="timeline">
@@ -1339,7 +1335,6 @@
           <span class="resume-row__desc">Minor in Accounting</span>
         </div>
 
-        <a href="kimaya_resume.pdf" download class="btn btn--primary" style="align-self:flex-start; margin-top:1rem;">download pdf ↓</a>
       </div>
     </div>
   </div>
@@ -1500,6 +1495,8 @@
       panels.forEach(p => p.classList.remove('is-open'));
       document.body.classList.remove('panel-open');
       navLinks.forEach(btn => btn.classList.remove('is-active'));
+      stackReady = false;
+      if (polaroidTimer) { clearInterval(polaroidTimer); polaroidTimer = null; }
     }
 
     // Open via any [data-panel] button
@@ -1523,43 +1520,24 @@
 
     /* ── Photo stack (initialised on panel open) ── */
     let stackReady = false;
+    let polaroidTimer = null;
     function initPhotoStack() {
       if (stackReady) return;
       stackReady = true;
-      const stackEl = document.getElementById('photoStack');
-      if (!stackEl) return;
-      const cards = [...stackEl.querySelectorAll('.photo-stack__card')];
-      const n = cards.length;
-      let deck = [...cards];
-      const rots = [-8, -4, 0];
-      const txs  = [-14, -6, 0];
-      const tys  = [10, 4, 0];
+      const slides = [...document.querySelectorAll('.polaroid-slide')];
+      const dots   = [...document.querySelectorAll('.polaroid-dot')];
+      if (!slides.length) return;
+      let current = 0;
 
-      function applyLayout() {
-        deck.forEach((card, pos) => {
-          card.classList.remove('is-top');
-          card.style.zIndex = pos + 1;
-          if (pos === n - 1) {
-            card.style.transform = 'rotate(0deg) translate(0,0)';
-            card.style.boxShadow = '0 18px 52px rgba(26,26,26,0.22)';
-            card.classList.add('is-top');
-          } else {
-            card.style.transform = `rotate(${rots[pos] ?? -8}deg) translate(${txs[pos] ?? -14}px,${tys[pos] ?? 10}px)`;
-            card.style.boxShadow = '';
-          }
-        });
+      function goTo(idx) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = (idx + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
       }
-      applyLayout();
 
-      stackEl.addEventListener('click', () => {
-        const top = deck[n - 1];
-        top.classList.add('is-leaving');
-        top.addEventListener('animationend', () => {
-          top.classList.remove('is-leaving', 'is-top');
-          deck = [top, ...deck.slice(0, n - 1)];
-          applyLayout();
-        }, { once: true });
-      });
+      polaroidTimer = setInterval(() => goTo(current + 1), 3000);
     }
 
     /* ── Moodboard subtle parallax (hero only, no scroll needed) ── */
